@@ -1,5 +1,6 @@
 // deploy-commands.js
 require('dotenv').config();
+const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 const { REST } = require('@discordjs/rest');
 const { Routes, SlashCommandBuilder } = require('discord.js');
 
