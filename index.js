@@ -1,9 +1,12 @@
+// index.js
 const { Client, GatewayIntentBits, REST, Routes } = require('discord.js');
 const { token, guildId, prefix } = require('./config.json');
 
+// === CONFIGURATION ===
 const LOG_CHANNEL_ID = '1466913486343766291';
-const authorizedUsers = ['291215718106791936'];
+const authorizedUsers = ['291215718106791936']; // Leave [] for public use
 
+// === CREATE CLIENT ===
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -12,7 +15,7 @@ const client = new Client({
   ]
 });
 
-// === LOGGING TO DISCORD CHANNEL ===
+// === OVERRIDE console.log TO SEND LOGS TO DISCORD ===
 const originalLog = console.log;
 console.log = async (...args) => {
   originalLog(...args);
@@ -28,32 +31,38 @@ console.log = async (...args) => {
   }
 };
 
-// === READY ===
+// === READY EVENT ===
 client.once('ready', () => {
   console.log(`Bot is online as ${client.user.tag}!`);
 });
 
-// === MESSAGE COMMAND ===
-client.on('messageCreate', message => {
+// === MESSAGE COMMAND (DM) ===
+client.on('messageCreate', async message => {
   if (message.author.bot) return;
+
   if (message.content.startsWith(prefix + 'dm')) {
-    if (!authorizedUsers.includes(message.author.id)) {
-      return message.reply('Only Owner is Allowed to Use this Command');
+    if (authorizedUsers.length > 0 && !authorizedUsers.includes(message.author.id)) {
+      return message.reply('Only Owner is allowed to use this command.');
     }
 
-    const args = message.content.split(" ").slice(1);
+    const args = message.content.split(' ').slice(1);
     const argresult = args.join(' ');
 
     message.guild.members.cache.forEach(member => {
-      member.send(argresult).catch(() => {
-        console.log(`DMs disabled for ${member.user.tag}`);
-      });
+      if (!member.user.bot) { // Skip bots
+        member.send(argresult).catch(() => {
+          console.log(`DMs disabled for ${member.user.tag}`);
+        });
+      }
     });
-    message.reply('**DONE**').then(msg => setTimeout(() => msg.delete(), 1000));
+
+    const reply = await message.reply('**DONE**');
+    setTimeout(() => reply.delete().catch(() => {}), 1000);
+    message.delete().catch(() => {});
   }
 });
 
-// === SLASH COMMAND ===
+// === SLASH COMMANDS ===
 const commands = [
   {
     name: 'raid',
@@ -70,6 +79,7 @@ const commands = [
 ];
 
 const rest = new REST({ version: '10' }).setToken(token);
+
 (async () => {
   try {
     console.log('Refreshing (/) commands...');
@@ -80,6 +90,7 @@ const rest = new REST({ version: '10' }).setToken(token);
   }
 })();
 
+// === HANDLE SLASH COMMANDS ===
 client.on('interactionCreate', async interaction => {
   if (!interaction.isChatInputCommand()) return;
 
@@ -89,10 +100,28 @@ client.on('interactionCreate', async interaction => {
 
   if (interaction.commandName === 'raid') {
     const count = Math.min(interaction.options.getInteger('count') || 5, 10);
+    const pattern = 'NUKED BY 888';
     let message = '';
-    for (let i = 0; i < count; i++) message += 'NUKED BY 888 ';
+    for (let i = 0; i < count; i++) message += pattern + ' ';
     await interaction.reply({ content: message });
     console.log(`/raid used by ${interaction.user.tag}: count ${count}`);
+  }
+});
+
+// === OPTIONAL MESSAGE-BASED RAID ===
+client.on('messageCreate', message => {
+  if (message.author.bot) return;
+
+  if (message.content.startsWith('!funraid')) {
+    if (authorizedUsers.length > 0 && !authorizedUsers.includes(message.author.id)) return;
+
+    const parts = message.content.split(' ');
+    const count = Math.min(parseInt(parts[1]) || 5, 10);
+    const pattern = 'NUKED BY 888';
+    let msg = '';
+    for (let i = 0; i < count; i++) msg += pattern + ' ';
+    message.reply(msg);
+    console.log(`!funraid used by ${message.author.tag}: count ${count}`);
   }
 });
 
