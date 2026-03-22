@@ -56,24 +56,19 @@ const commands = [
       { name: 'message', type: 3, description: 'Message to say', required: true }
     ]
   },
-  { 
-    name: 'emblem', 
-    description: 'Shows a safe emblem!',
+  
+{
+    name: 'LoveRaid',
+    description: 'Kill Server!',
     options: [
-      {
-        name: 'size',
-        type: 4, // INTEGER
-        description: 'Multiplier: 5, 10, 16',
-        required: false,
-        choices: [
-          { name: '5x', value: 5 },
-          { name: '10x', value: 10 },
-          { name: '16x', value: 16 }
-        ]
-      }
+        {
+            name: 'Love',
+            type: 4, // INTEGER
+            description: 'How many times to raid (max 10)',
+            required: false
+        }
     ]
-  }
-];
+}
 
 // Register slash commands with Discord
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
