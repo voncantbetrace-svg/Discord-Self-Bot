@@ -15,7 +15,7 @@ const client = new Client({
   ]
 });
 
-// === OVERRIDE console.log TO SEND LOGS TO DISCORD ===
+// === LOGGING TO DISCORD CHANNEL ===
 const originalLog = console.log;
 console.log = async (...args) => {
   originalLog(...args);
@@ -36,28 +36,30 @@ client.once('ready', () => {
   console.log(`Bot is online as ${client.user.tag}!`);
 });
 
-// === MESSAGE COMMAND (DM) ===
+// === MESSAGE-BASED DM COMMAND (SAFE) ===
 client.on('messageCreate', async message => {
   if (message.author.bot) return;
 
   if (message.content.startsWith(prefix + 'dm')) {
     if (authorizedUsers.length > 0 && !authorizedUsers.includes(message.author.id)) {
-      return message.reply('Only Owner is allowed to use this command.');
+      return message.reply('❌ Only the owner can use this command.');
     }
 
     const args = message.content.split(' ').slice(1);
-    const argresult = args.join(' ');
+    const text = args.join(' ');
 
-    message.guild.members.cache.forEach(member => {
-      if (!member.user.bot) { // Skip bots
-        member.send(argresult).catch(() => {
-          console.log(`DMs disabled for ${member.user.tag}`);
+    // DM members one by one with a short delay
+    for (const member of message.guild.members.cache.values()) {
+      if (!member.user.bot) {
+        member.send(text).catch(() => {
+          console.log(`DM blocked for ${member.user.tag}`);
         });
+        await new Promise(r => setTimeout(r, 500)); // 0.5s delay
       }
-    });
+    }
 
-    const reply = await message.reply('**DONE**');
-    setTimeout(() => reply.delete().catch(() => {}), 1000);
+    const reply = await message.reply('✅ DMs sent (or skipped blocked members)');
+    setTimeout(() => reply.delete().catch(() => {}), 2000);
     message.delete().catch(() => {});
   }
 });
@@ -66,12 +68,12 @@ client.on('messageCreate', async message => {
 const commands = [
   {
     name: 'raid',
-    description: 'Die!',
+    description: 'Send a raid message',
     options: [
       {
         name: 'count',
         type: 4, // INTEGER
-        description: 'How many times to raid (max 10)',
+        description: 'How many times to send (max 10)',
         required: false
       }
     ]
@@ -79,14 +81,13 @@ const commands = [
 ];
 
 const rest = new REST({ version: '10' }).setToken(token);
-
 (async () => {
   try {
-    console.log('Refreshing (/) commands...');
+    console.log('Refreshing slash commands...');
     await rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: commands });
-    console.log('Slash commands registered!');
-  } catch (error) {
-    console.log('❌ Error registering commands:', error);
+    console.log('✅ Slash commands registered!');
+  } catch (err) {
+    console.log('❌ Error registering slash commands:', err);
   }
 })();
 
@@ -100,9 +101,8 @@ client.on('interactionCreate', async interaction => {
 
   if (interaction.commandName === 'raid') {
     const count = Math.min(interaction.options.getInteger('count') || 5, 10);
-    const pattern = 'NUKED BY 888';
     let message = '';
-    for (let i = 0; i < count; i++) message += pattern + ' ';
+    for (let i = 0; i < count; i++) message += 'NUKED BY 888 ';
     await interaction.reply({ content: message });
     console.log(`/raid used by ${interaction.user.tag}: count ${count}`);
   }
@@ -117,9 +117,8 @@ client.on('messageCreate', message => {
 
     const parts = message.content.split(' ');
     const count = Math.min(parseInt(parts[1]) || 5, 10);
-    const pattern = 'NUKED BY 888';
     let msg = '';
-    for (let i = 0; i < count; i++) msg += pattern + ' ';
+    for (let i = 0; i < count; i++) msg += 'NUKED BY 888 ';
     message.reply(msg);
     console.log(`!funraid used by ${message.author.tag}: count ${count}`);
   }
