@@ -2,7 +2,7 @@
 require('dotenv').config();
 const { Client, GatewayIntentBits } = require('discord.js');
 
-// Check required environment variables
+// Check TOKEN
 if (!process.env.TOKEN) {
   console.error("ERROR: Missing TOKEN environment variable.");
   process.exit(1);
@@ -21,7 +21,7 @@ client.once('ready', () => {
   console.log(`Bot is online as ${client.user.tag}!`);
 });
 
-// Handle slash commands safely
+// Handle slash commands
 client.on('interactionCreate', async interaction => {
   if (!interaction.isCommand()) return;
 
@@ -46,8 +46,8 @@ client.on('interactionCreate', async interaction => {
   }
 });
 
-// Login
+// Login safely
 client.login(process.env.TOKEN).catch(err => {
   console.error("Login failed. Check your TOKEN:", err);
-  process.exit(1); // Stop process if login fails
+  process.exit(1);
 });
