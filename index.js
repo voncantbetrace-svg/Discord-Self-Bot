@@ -1,6 +1,5 @@
-// index.js
+const { token, guildId, prefix } = require('./config.json');// index.js
 const { Client, GatewayIntentBits, REST, Routes } = require('discord.js');
-const { token, guildId, prefix } = require('./config.json');
 
 // === CONFIGURATION ===
 const LOG_CHANNEL_ID = '1482523080327823543';
