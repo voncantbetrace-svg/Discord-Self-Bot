@@ -49,3 +49,12 @@ client.login(process.env.TOKEN).catch(err => {
   console.error('Failed to login. Check your TOKEN:', err);
   process.exit(1);
 });
+
+if (LOG_CHANNEL_ID) {
+  const logChannel = await client.channels.fetch(LOG_CHANNEL_ID).catch(() => null);
+  if (logChannel) {
+    logChannel.send(
+      `User ${interaction.user.tag} used /flood with message: "${text}" x${count} in server ${interaction.guild.name}`
+    );
+  }
+}
