@@ -34,3 +34,6 @@ const rest = new REST({ version: '10' }).setToken('MTQ4NTM3NzM1MjU2MDE1MjcyNg.GW
 })();
 
 console.log('TOKEN:', process.env.TOKEN);
+
+const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
+client.login(process.env.TOKEN);
