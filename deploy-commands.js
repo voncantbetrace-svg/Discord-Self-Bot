@@ -17,7 +17,7 @@ const commands = [
             .setDescription('Number of times to send (1-16)'))
 ].map(cmd => cmd.toJSON());
 
-// **Declare rest only once**
+// Create REST client (only once)
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 
 (async () => {
