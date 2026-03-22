@@ -126,3 +126,6 @@ client.on('messageCreate', message => {
 
 // === LOGIN ===
 client.login(token);
+
+const { token } = require('./config.json');
+client.login(token);
