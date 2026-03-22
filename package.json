@@ -1,7 +1,7 @@
 {
   "name": "my-discord-bot",
   "version": "1.0.0",
-  "description": "Discord bot for Railway",
+  "description": "Simple Discord bot for Railway",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
