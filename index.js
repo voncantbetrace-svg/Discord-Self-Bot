@@ -1,5 +1,4 @@
 const { Client, GatewayIntentBits } = require('discord.js');
-const { token } = require('./config.json');
 
 // Create the client
 const client = new Client({
