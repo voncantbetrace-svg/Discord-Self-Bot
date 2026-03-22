@@ -1,3 +1,5 @@
-{
-  "token": "MTQ4NDcxOTkwNTI0Mzc5NTUwNg.GVMegL.XuEcLrNC27YeNrxh-FHeRVTPwH-RL6TR39zyZk"
-}
+module.exports = {
+  token: 'MTQ4NDcxOTkwNTI0Mzc5NTUwNg.G05nTk.RDkG5EYhZiUVgxaRcl73EqURs2wNFfq4xk548c',
+  clientId: '1484719905243795506',
+  guildId: '1484257224053231618' // optional but faster for commands
+};
