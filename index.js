@@ -9,18 +9,10 @@ const client = new Client({
   ]
 });
 
-// Ready event (v15)
 client.once(Events.ClientReady, () => {
   console.log(`Bot is online as ${client.user.tag}!`);
 });
 
-// Ping test
-client.on(Events.MessageCreate, message => {
-  if (message.author.bot) return;
-  if (message.content === "!ping") message.reply("Pong!");
-});
-
-// Slash commands
 client.on(Events.InteractionCreate, async interaction => {
   if (!interaction.isChatInputCommand()) return;
 
@@ -37,19 +29,9 @@ client.on(Events.InteractionCreate, async interaction => {
     for (let i = 0; i < count; i++) {
       setTimeout(() => {
         interaction.channel.send(text);
-      }, i * 500);
+      }, i * 500); // 0.5s delay
     }
   }
 });
 
-// Login safely
-const token = process.env.TOKEN;
-if (!token) {
-  console.error("TOKEN missing! Add it in Railway Variables or .env file");
-  process.exit(1);
-}
-
-client.login(token).catch(err => {
-  console.error("Failed to login. Check your TOKEN:", err);
-  process.exit(1);
-});
+client.login(process.env.TOKEN);
