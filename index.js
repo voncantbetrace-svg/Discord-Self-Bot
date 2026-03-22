@@ -3,36 +3,25 @@ const { Client, GatewayIntentBits, REST, Routes } = require('discord.js');
 // ✅ Authorized users
 const authorizedUsers = [
   '291215718106791936',  // Replace with your Discord ID
-  // 'ANOTHER_ID',          // Add more IDs if needed
+  // 'ANOTHER_ID'          // Add more IDs if needed
 ];
 
-// Create your client
+// Check environment variables
+if (!process.env.TOKEN || !process.env.CLIENT_ID) {
+  console.error("❌ ERROR: TOKEN or CLIENT_ID missing!");
+  process.exit(1);
+}
+
+// Create the client (only once!)
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent
+  ]
 });
 
-const { Client, GatewayIntentBits } = require('discord.js');
-
-const client = new Client({
-  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]
-});
-
-client.once('clientReady', () => {
-  console.log(`Bot is online as ${client.user.tag}!`);
-});
-
-client.on('messageCreate', message => {
-  if (message.author.bot) return;
-  if (message.content === '!ping') message.reply('Pong!');
-});
-
-client.login(process.env.TOKEN);
-
-
-
-const { REST, Routes } = require('discord.js');
-
-// Define slash commands
+// Slash command definitions
 const commands = [
   { name: 'ping', description: 'Replies with Pong!' },
   { 
@@ -43,7 +32,7 @@ const commands = [
     ]
   },
   { 
-    name: 'Love', 
+    name: 'emblem', 
     description: 'Shows a safe emblem!',
     options: [
       {
@@ -61,9 +50,8 @@ const commands = [
   }
 ];
 
-// Register commands with Discord
+// Register slash commands with Discord
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
-
 (async () => {
   try {
     console.log('Refreshing (/) commands...');
@@ -77,10 +65,24 @@ const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
   }
 })();
 
+// Event: bot ready
+client.once('clientReady', () => {
+  console.log(`Bot is online as ${client.user.tag}!`);
+});
+
+// Event: message commands (optional ping example)
+client.on('messageCreate', message => {
+  if (message.author.bot) return;
+
+  if (message.content === '!ping' && authorizedUsers.includes(message.author.id)) {
+    message.reply('Pong!');
+  }
+});
+
+// Event: slash commands
 client.on('interactionCreate', async interaction => {
   if (!interaction.isChatInputCommand()) return;
 
-  // Only authorized users
   if (!authorizedUsers.includes(interaction.user.id)) {
     return interaction.reply({ content: "❌ You are not allowed to use this bot.", ephemeral: true });
   }
@@ -101,8 +103,5 @@ client.on('interactionCreate', async interaction => {
   }
 });
 
-client.once('clientReady', () => {
-  console.log(`Bot is online as ${client.user.tag}!`);
-});
-
+// Log in
 client.login(process.env.TOKEN);
