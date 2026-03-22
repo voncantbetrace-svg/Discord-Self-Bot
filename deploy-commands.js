@@ -1,4 +1,5 @@
 require('dotenv').config();
+const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 const { REST, Routes, SlashCommandBuilder } = require('discord.js');
 
 const commands = [
@@ -28,3 +29,8 @@ const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
     console.error('Error registering commands:', err);
   }
 })();
+
+const { REST } = require('@discordjs/rest');
+const { Routes } = require('discord.js');
+
+
