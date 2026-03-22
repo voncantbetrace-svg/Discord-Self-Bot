@@ -1,9 +1,10 @@
+// index.js
 const { Client, GatewayIntentBits, REST, Routes } = require('discord.js');
 
-// ✅ Authorized users
+// Optional: Only allow certain users to use the bot
+// If you want the bot fully public, leave this array empty or remove the check
 const authorizedUsers = [
-  '291215718106791936',  // Replace with your Discord ID
-  // 'ANOTHER_ID'          // Add more IDs if needed
+  'YOUR_DISCORD_ID_HERE', // Optional: only you can run restricted commands
 ];
 
 // Check environment variables
@@ -12,7 +13,7 @@ if (!process.env.TOKEN || !process.env.CLIENT_ID) {
   process.exit(1);
 }
 
-// Create the client (only once!)
+// Create the client
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -21,7 +22,7 @@ const client = new Client({
   ]
 });
 
-// Slash command definitions
+// Define slash commands
 const commands = [
   { name: 'ping', description: 'Replies with Pong!' },
   { 
@@ -52,42 +53,32 @@ const commands = [
 
 // Register slash commands with Discord
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
+
 (async () => {
   try {
     console.log('Refreshing (/) commands...');
-    await rest.put(
-      Routes.applicationCommands(process.env.CLIENT_ID),
-      { body: commands }
-    );
+    await rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: commands });
     console.log('Slash commands registered!');
   } catch (error) {
     console.error(error);
   }
 })();
 
-// Event: bot ready
+// Event: Bot ready
 client.once('clientReady', () => {
   console.log(`Bot is online as ${client.user.tag}!`);
 });
 
-// Event: message commands (optional ping example)
-client.on('messageCreate', message => {
-  if (message.author.bot) return;
-
-  if (message.content === '!ping' && authorizedUsers.includes(message.author.id)) {
-    message.reply('Pong!');
-  }
-});
-
-// Event: slash commands
+// Handle slash commands
 client.on('interactionCreate', async interaction => {
   if (!interaction.isChatInputCommand()) return;
 
-  if (!authorizedUsers.includes(interaction.user.id)) {
+  const { commandName } = interaction;
+
+  // Optional restriction for authorized users
+  if (authorizedUsers.length > 0 && !authorizedUsers.includes(interaction.user.id)) {
     return interaction.reply({ content: "❌ You are not allowed to use this bot.", ephemeral: true });
   }
-
-  const { commandName } = interaction;
 
   if (commandName === 'ping') {
     await interaction.reply('Pong!');
@@ -97,11 +88,4 @@ client.on('interactionCreate', async interaction => {
     await interaction.reply(msg);
   } 
   else if (commandName === 'emblem') {
-    const size = interaction.options.getInteger('size') || 5;
-    const emblem = '🎖️'.repeat(size) + ' 🛡️'.repeat(size);
-    await interaction.reply({ content: `**Your Emblem:** ${emblem}` });
-  }
-});
-
-// Log in
-client.login(process.env.TOKEN);
+    const size = interaction.options.getInteger('
