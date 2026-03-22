@@ -1,0 +1,5 @@
+{
+  "token": "MTQ4NDcxOTkwNTI0Mzc5NTUwNg.GlmH2v.ZspSrjg2fgKihD7FW_FtWK-deNfvMiRANPQRj0",
+  "guildId": "1483499696822550680",
+  "prefix": "!",
+}
