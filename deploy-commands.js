@@ -1,42 +1,30 @@
-const { REST, Routes } = require('discord.js');
 require('dotenv').config();
+const { REST, Routes, SlashCommandBuilder } = require('discord.js');
 
 const commands = [
-  {
-    name: 'flood',
-    description: 'Send a burst of messages',
-    options: [
-      {
-        name: 'message',
-        type: 3,
-        description: 'The message to send',
-        required: true
-      },
-      {
-        name: 'count',
-        type: 4,
-        description: 'Amount (1-16)',
-        required: false,
-        min_value: 1,
-        max_value: 16,
-      }
-    ]
-  }
-];
+  new SlashCommandBuilder()
+    .setName('flood')
+    .setDescription('Send messages with Cyber emblem')
+    .addStringOption(option =>
+      option.setName('message')
+            .setDescription('Message to send')
+            .setRequired(true))
+    .addIntegerOption(option =>
+      option.setName('count')
+            .setDescription('Number of times to send (1-16)'))
+].map(cmd => cmd.toJSON());
 
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 
 (async () => {
   try {
-    console.log('Registering GLOBAL slash commands...');
-    
+    console.log('Registering commands...');
     await rest.put(
-      Routes.applicationCommands(process.env.CLIENT_ID), // GLOBAL
+      Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.GUILD_ID),
       { body: commands }
     );
-
-    console.log('Global commands registered (may take up to 1 hour to show).');
+    console.log('Commands registered successfully!');
   } catch (err) {
-    console.error(err);
+    console.error('Error registering commands:', err);
   }
 })();
