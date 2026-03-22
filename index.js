@@ -1,5 +1,13 @@
+// Old
+// const { token, prefix, logChannelId } = require('./config.json');
+
+// New
+require('dotenv').config(); // load .env variables
 const { Client, GatewayIntentBits } = require('discord.js');
-const { token, prefix, logChannelId } = require('./config.json');
+
+const token = process.env.TOKEN; // token comes from env
+const prefix = process.env.PREFIX || "!"; // optional
+const logChannelId = process.env.LOG_CHANNEL_ID;
 
 const client = new Client({
     intents: [
@@ -16,12 +24,10 @@ client.once('ready', () => {
 client.on('messageCreate', async (message) => {
     if (message.author.bot) return;
 
-    // Simple command example
     if (message.content.startsWith(prefix + 'ping')) {
         await message.reply('Pong! 🏓');
     }
 
-    // Logging messages to a specific channel
     const logChannel = client.channels.cache.get(logChannelId);
     if (logChannel) {
         logChannel.send(`📩 ${message.author.tag}: ${message.content}`);
