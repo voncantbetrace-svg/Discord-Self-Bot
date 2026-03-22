@@ -23,7 +23,7 @@ const client = new Client({
 });
 
 const Discord = require('discord.js');
-const { 291215718106791936, MTQ4NDk2ODY5MzQ2ODM2NDgyMA.Gbdsxa.IkkZsDlmJ8ehrLwCXp27sktd7OgBMJ8bhe6Row, ¡ } = require('./config.json');
+const { token, guildId, prefix } = require('./config.json');
 const Bot = new Discord.Client();({ws: { intents: new Discord.Intents(Discord.Intents.ALL) } });
 
 Bot.on("ready", () => {
