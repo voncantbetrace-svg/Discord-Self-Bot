@@ -1,6 +1,7 @@
+
 module.exports = {
   token: 'MTQ4NDcxOTkwNTI0Mzc5NTUwNg.G05nTk.RDkG5EYhZiUVgxaRcl73EqURs2wNFfq4xk548c',
   clientId: '1484719905243795506',
-  guildId: '1484257224053231618' // optional but faster for commands
+  guildId: '1484257224053231618', // optional
+  logChannelId: '1484257224053231618' // channel for logs
 };
- 
