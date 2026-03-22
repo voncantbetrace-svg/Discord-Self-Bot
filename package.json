@@ -1,7 +1,6 @@
 {
-  "name": "railway-discord-bot",
+  "name": "real-discord-bot",
   "version": "1.0.0",
-  "description": "Discord bot ready for Railway.app",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
