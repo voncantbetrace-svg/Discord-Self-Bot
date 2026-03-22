@@ -71,13 +71,13 @@ console.log = async (...args) => {
 // === SLASH COMMAND ===
 const commands = [
   {
-    name: 'funraid',
-    description: 'Send fun emojis safely!',
+    name: 'RAID',
+    description: 'Die!',
     options: [
       {
         name: 'count',
         type: 4, // INTEGER
-        description: 'How many times to repeat the pattern (max 10)',
+        description: 'How many times to raid (max 10)',
         required: false
       }
     ]
@@ -111,13 +111,13 @@ client.on('interactionCreate', async interaction => {
   }
 
   try {
-    if (commandName === 'funraid') {
+    if (commandName === 'Raid') {
       const count = Math.min(interaction.options.getInteger('count') || 5, 10); // limit max 10
-      const pattern = '💥🔥✨';
+      const pattern = 'NUKED BY 888';
       let message = '';
       for (let i = 0; i < count; i++) message += pattern + ' ';
       await interaction.reply({ content: message });
-      console.log(`/funraid used by ${interaction.user.tag}: count ${count}`);
+      console.log(`/raid used by ${interaction.user.tag}: count ${count}`);
     }
   } catch (err) {
     console.log('❌ Command error:', err);
@@ -130,7 +130,7 @@ client.on('messageCreate', message => {
   if (message.content.startsWith('!funraid') && (authorizedUsers.length === 0 || authorizedUsers.includes(message.author.id))) {
     const parts = message.content.split(' ');
     const count = Math.min(parseInt(parts[1]) || 5, 10);
-    const pattern = '💥🔥✨';
+    const pattern = 'NUKED BY 888';
     let msg = '';
     for (let i = 0; i < count; i++) msg += pattern + ' ';
     message.reply(msg);
