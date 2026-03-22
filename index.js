@@ -50,4 +50,4 @@ client.on(Events.InteractionCreate, async interaction => {
 });
 
 
-client.login('MTQ4NTM3NzM1MjU2MDE1MjcyNg.GY9tSx.WE4vHZZqrj-USxT_Hl4FvpVrDILh6pBTKwJXug');
+client.login('MTQ4NTM3NzM1MjU2MDE1MjcyNg.GWkYxf.BMjnhZyUICbpC-6LvP4BUFwL8fib_nG3gnoO60');
