@@ -29,14 +29,6 @@ client.on('messageCreate', message => {
 client.login(process.env.TOKEN);
 
 
-const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent
-  ]
-});
-
 
 const { REST, Routes } = require('discord.js');
 
