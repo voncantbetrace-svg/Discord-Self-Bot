@@ -28,6 +28,16 @@ client.on('messageCreate', message => {
 
 client.login(process.env.TOKEN);
 
+
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent
+  ]
+});
+
+
 const { REST, Routes } = require('discord.js');
 
 // Define slash commands
@@ -74,3 +84,33 @@ const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
     console.error(error);
   }
 })();
+
+client.on('interactionCreate', async interaction => {
+  if (!interaction.isChatInputCommand()) return;
+
+  // Only authorized users
+  if (!authorizedUsers.includes(interaction.user.id)) {
+    return interaction.reply({ content: "❌ You are not allowed to use this bot.", ephemeral: true });
+  }
+
+  const { commandName } = interaction;
+
+  if (commandName === 'ping') {
+    await interaction.reply('Pong!');
+  } 
+  else if (commandName === 'say') {
+    const msg = interaction.options.getString('message');
+    await interaction.reply(msg);
+  } 
+  else if (commandName === 'emblem') {
+    const size = interaction.options.getInteger('size') || 5;
+    const emblem = '🎖️'.repeat(size) + ' 🛡️'.repeat(size);
+    await interaction.reply({ content: `**Your Emblem:** ${emblem}` });
+  }
+});
+
+client.once('clientReady', () => {
+  console.log(`Bot is online as ${client.user.tag}!`);
+});
+
+client.login(process.env.TOKEN);
