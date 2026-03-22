@@ -1,14 +1,21 @@
 // index.js
+require('dotenv').config();
 const { Client, GatewayIntentBits } = require('discord.js');
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent
+  ]
+});
 
 // Bot ready
 client.once('ready', () => {
   console.log(`Bot is online as ${client.user.tag}!`);
 });
 
-// Slash command handler
+// Handle slash commands
 client.on('interactionCreate', async interaction => {
   if (!interaction.isCommand()) return;
 
@@ -26,5 +33,5 @@ client.on('interactionCreate', async interaction => {
   }
 });
 
-// Login with placeholder token
-client.login('MTQ4NTM3NzM1MjU2MDE1MjcyNg.GWkYxf.BMjnhZyUICbpC-6LvP4BUFwL8fib_nG3gnoO60');
+// Login
+client.login(process.env.TOKEN);
