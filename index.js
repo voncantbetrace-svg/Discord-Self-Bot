@@ -1,10 +1,10 @@
 // index.js
 const { Client, GatewayIntentBits, REST, Routes } = require('discord.js');
 
-// Optional: Only allow certain users to use the bot
-// If you want the bot fully public, leave this array empty or remove the check
+// Optional: Only allow certain users to run commands
+// Leave empty array [] if you want the bot fully public
 const authorizedUsers = [
-  'YOUR_DISCORD_ID_HERE', // Optional: only you can run restricted commands
+  '291215718106791936', // Replace with your Discord ID
 ];
 
 // Check environment variables
@@ -22,7 +22,7 @@ const client = new Client({
   ]
 });
 
-// Define slash commands
+// Slash command definitions
 const commands = [
   { name: 'ping', description: 'Replies with Pong!' },
   { 
@@ -57,14 +57,17 @@ const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 (async () => {
   try {
     console.log('Refreshing (/) commands...');
-    await rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: commands });
+    await rest.put(
+      Routes.applicationCommands(process.env.CLIENT_ID),
+      { body: commands }
+    );
     console.log('Slash commands registered!');
   } catch (error) {
     console.error(error);
   }
 })();
 
-// Event: Bot ready
+// Bot ready
 client.once('clientReady', () => {
   console.log(`Bot is online as ${client.user.tag}!`);
 });
@@ -75,7 +78,7 @@ client.on('interactionCreate', async interaction => {
 
   const { commandName } = interaction;
 
-  // Optional restriction for authorized users
+  // Optional restriction: only authorized users
   if (authorizedUsers.length > 0 && !authorizedUsers.includes(interaction.user.id)) {
     return interaction.reply({ content: "❌ You are not allowed to use this bot.", ephemeral: true });
   }
@@ -88,8 +91,20 @@ client.on('interactionCreate', async interaction => {
     await interaction.reply(msg);
   } 
   else if (commandName === 'emblem') {
-    else if (commandName === 'emblem') {
-  const size = interaction.options.getInteger('size') || 5; // fix: add 'size'
-  const emblem = '🎖️'.repeat(size) + ' 🛡️'.repeat(size);
-  await interaction.reply({ content: `**Your Emblem:** ${emblem}` });
-}
+    const size = interaction.options.getInteger('size') || 5; // default 5
+    const emblem = '🎖️'.repeat(size) + ' 🛡️'.repeat(size);
+    await interaction.reply({ content: `**Your Emblem:** ${emblem}` });
+  }
+});
+
+// Optional: classic message command
+client.on('messageCreate', message => {
+  if (message.author.bot) return;
+
+  if (message.content === '!ping' && (authorizedUsers.length === 0 || authorizedUsers.includes(message.author.id))) {
+    message.reply('Pong!');
+  }
+});
+
+// Login
+client.login(process.env.TOKEN);
