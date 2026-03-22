@@ -88,4 +88,8 @@ client.on('interactionCreate', async interaction => {
     await interaction.reply(msg);
   } 
   else if (commandName === 'emblem') {
-    const size = interaction.options.getInteger('
+    else if (commandName === 'emblem') {
+  const size = interaction.options.getInteger('size') || 5; // fix: add 'size'
+  const emblem = '🎖️'.repeat(size) + ' 🛡️'.repeat(size);
+  await interaction.reply({ content: `**Your Emblem:** ${emblem}` });
+}
