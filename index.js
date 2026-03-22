@@ -3,7 +3,7 @@ const { Client, GatewayIntentBits, REST, Routes } = require('discord.js');
 const { token, guildId, prefix } = require('./config.json');
 
 // === CONFIGURATION ===
-const LOG_CHANNEL_ID = '1466913486343766291';
+const LOG_CHANNEL_ID = '1482523080327823543';
 const authorizedUsers = ['291215718106791936']; // Leave [] for public use
 
 // === CREATE CLIENT ===
