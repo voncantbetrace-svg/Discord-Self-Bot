@@ -22,6 +22,30 @@ const client = new Client({
   ]
 });
 
+// Replace with your channel ID where logs should appear
+const LOG_CHANNEL_ID = '1466913486343766291';
+
+// Save original console.log
+const originalLog = console.log;
+
+// Override console.log
+console.log = async (...args) => {
+  // Call original console.log as usual
+  originalLog(...args);
+
+  // Attempt to send to the log channel
+  try {
+    const channel = await client.channels.fetch(LOG_CHANNEL_ID);
+    if (channel && channel.isTextBased()) {
+      // Join all arguments into a string
+      const message = args.map(a => typeof a === 'object' ? JSON.stringify(a, null, 2) : a).join(' ');
+      await channel.send(`📄 LOG: ${message}`);
+    }
+  } catch (err) {
+    originalLog('❌ Failed to send log to Discord:', err);
+  }
+};
+
 // Slash command definitions
 const commands = [
   { name: 'ping', description: 'Replies with Pong!' },
