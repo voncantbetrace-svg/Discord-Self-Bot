@@ -32,3 +32,5 @@ const rest = new REST({ version: '10' }).setToken('MTQ4NTM3NzM1MjU2MDE1MjcyNg.GW
     console.error('Error registering commands:', err);
   }
 })();
+
+console.log('TOKEN:', process.env.TOKEN);
