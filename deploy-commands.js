@@ -3,7 +3,7 @@ require('dotenv').config();
 const { REST } = require('@discordjs/rest');
 const { Routes, SlashCommandBuilder } = require('discord.js');
 
-// Define your commands
+// Your commands
 const commands = [
   new SlashCommandBuilder()
     .setName('flood')
@@ -17,14 +17,14 @@ const commands = [
             .setDescription('Number of times to send (1-16)'))
 ].map(cmd => cmd.toJSON());
 
-// Create REST client
-const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
+// REST client with placeholder token
+const rest = new REST({ version: '10' }).setToken('MTQ4NTM3NzM1MjU2MDE1MjcyNg.GWkYxf.BMjnhZyUICbpC-6LvP4BUFwL8fib_nG3gnoO60');
 
 (async () => {
   try {
     console.log('Registering commands...');
     await rest.put(
-      Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.GUILD_ID),
+      Routes.applicationGuildCommands('YOUR_CLIENT_ID', 'YOUR_GUILD_ID'),
       { body: commands }
     );
     console.log('Commands registered successfully!');
