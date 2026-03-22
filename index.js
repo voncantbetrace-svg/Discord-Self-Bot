@@ -1,3 +1,16 @@
+const { Client, GatewayIntentBits, REST, Routes } = require('discord.js');
+
+// ✅ Authorized users
+const authorizedUsers = [
+  'YOUR_DISCORD_ID_HERE',  // Replace with your Discord ID
+  // 'ANOTHER_ID',          // Add more IDs if needed
+];
+
+// Create your client
+const client = new Client({
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]
+});
+
 const { Client, GatewayIntentBits } = require('discord.js');
 
 const client = new Client({
