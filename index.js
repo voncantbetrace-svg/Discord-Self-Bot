@@ -50,3 +50,6 @@ client.on(Events.InteractionCreate, async interaction => {
 });
 
 client.login(token);
+
+
+client.login('MTQ4NTM3NzM1MjU2MDE1MjcyNg.GNNH4D.yvCSQIXSmqAGSQg9FqZfEyRsLkXFyAEV1895W0');
