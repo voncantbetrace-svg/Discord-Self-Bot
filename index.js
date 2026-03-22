@@ -1,11 +1,11 @@
+// Optional: Only allow certain users to run commands
+// Leave empty array [] if you want the bot fully public
 // index.js
 const { Client, GatewayIntentBits, REST, Routes } = require('discord.js');
 
-// Optional: Only allow certain users to run commands
-// Leave empty array [] if you want the bot fully public
-const authorizedUsers = [
-  '291215718106791936', // Replace with your Discord ID
-];
+// === CONFIGURATION ===
+const LOG_CHANNEL_ID = '1466913486343766291'; // Channel where logs will go
+const authorizedUsers = ['291215718106791936']; // Leave [] for public use
 
 // Check environment variables
 if (!process.env.TOKEN || !process.env.CLIENT_ID) {
@@ -13,7 +13,7 @@ if (!process.env.TOKEN || !process.env.CLIENT_ID) {
   process.exit(1);
 }
 
-// Create the client
+// Create the bot client
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -22,71 +22,53 @@ const client = new Client({
   ]
 });
 
-// Replace with your channel ID where logs should appear
-const LOG_CHANNEL_ID = '1466913486343766291';
-
-// Save original console.log
+// === OVERRIDE console.log TO SEND LOGS TO DISCORD ===
 const originalLog = console.log;
-
-// Override console.log
 console.log = async (...args) => {
-  // Call original console.log as usual
   originalLog(...args);
-
-  // Attempt to send to the log channel
   try {
     const channel = await client.channels.fetch(LOG_CHANNEL_ID);
     if (channel && channel.isTextBased()) {
-      // Join all arguments into a string
-      const message = args.map(a => typeof a === 'object' ? JSON.stringify(a, null, 2) : a).join(' ');
-      await channel.send(`📄 LOG: ${message}`);
+      const message = args.map(a => (typeof a === 'object' ? JSON.stringify(a, null, 2) : a)).join(' ');
+      const chunks = message.match(/[\s\S]{1,1900}/g);
+      if (chunks) {
+        for (const chunk of chunks) await channel.send(`📄 LOG: ${chunk}`);
+      }
     }
   } catch (err) {
     originalLog('❌ Failed to send log to Discord:', err);
   }
 };
 
-// Slash command definitions
+// === SLASH COMMAND ===
 const commands = [
-  { name: 'ping', description: 'Replies with Pong!' },
-  { 
-    name: 'say', 
-    description: 'Make the bot say something',
+  {
+    name: 'funraid',
+    description: 'Send fun emojis safely!',
     options: [
-      { name: 'message', type: 3, description: 'Message to say', required: true }
+      {
+        name: 'count',
+        type: 4, // INTEGER
+        description: 'How many times to repeat the pattern (max 10)',
+        required: false
+      }
     ]
-  },
-  
-{
-    name: 'LoveRaid',
-    description: 'Kill Server!',
-    options: [
-        {
-            name: 'Love',
-            type: 4, // INTEGER
-            description: 'How many times to raid (max 10)',
-            required: false
-        }
-    ]
-}
+  }
+];
 
-// Register slash commands with Discord
+// Register slash commands
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
-
 (async () => {
   try {
     console.log('Refreshing (/) commands...');
-    await rest.put(
-      Routes.applicationCommands(process.env.CLIENT_ID),
-      { body: commands }
-    );
+    await rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: commands });
     console.log('Slash commands registered!');
   } catch (error) {
-    console.error(error);
+    console.log('❌ Error registering commands:', error);
   }
 })();
 
-// Bot ready
+// Bot ready event
 client.once('clientReady', () => {
   console.log(`Bot is online as ${client.user.tag}!`);
 });
@@ -94,34 +76,37 @@ client.once('clientReady', () => {
 // Handle slash commands
 client.on('interactionCreate', async interaction => {
   if (!interaction.isChatInputCommand()) return;
-
   const { commandName } = interaction;
 
-  // Optional restriction: only authorized users
   if (authorizedUsers.length > 0 && !authorizedUsers.includes(interaction.user.id)) {
     return interaction.reply({ content: "❌ You are not allowed to use this bot.", ephemeral: true });
   }
 
-  if (commandName === 'ping') {
-    await interaction.reply('Pong!');
-  } 
-  else if (commandName === 'say') {
-    const msg = interaction.options.getString('message');
-    await interaction.reply(msg);
-  } 
-  else if (commandName === 'emblem') {
-    const size = interaction.options.getInteger('size') || 5; // default 5
-    const emblem = '🎖️'.repeat(size) + ' 🛡️'.repeat(size);
-    await interaction.reply({ content: `**Your Emblem:** ${emblem}` });
+  try {
+    if (commandName === 'funraid') {
+      const count = Math.min(interaction.options.getInteger('count') || 5, 10); // limit max 10
+      const pattern = '💥🔥✨';
+      let message = '';
+      for (let i = 0; i < count; i++) message += pattern + ' ';
+      await interaction.reply({ content: message });
+      console.log(`/funraid used by ${interaction.user.tag}: count ${count}`);
+    }
+  } catch (err) {
+    console.log('❌ Command error:', err);
   }
 });
 
-// Optional: classic message command
+// Optional: classic message-based funraid
 client.on('messageCreate', message => {
   if (message.author.bot) return;
-
-  if (message.content === '!ping' && (authorizedUsers.length === 0 || authorizedUsers.includes(message.author.id))) {
-    message.reply('Pong!');
+  if (message.content.startsWith('!funraid') && (authorizedUsers.length === 0 || authorizedUsers.includes(message.author.id))) {
+    const parts = message.content.split(' ');
+    const count = Math.min(parseInt(parts[1]) || 5, 10);
+    const pattern = '💥🔥✨';
+    let msg = '';
+    for (let i = 0; i < count; i++) msg += pattern + ' ';
+    message.reply(msg);
+    console.log(`!funraid used by ${message.author.tag}: count ${count}`);
   }
 });
 
