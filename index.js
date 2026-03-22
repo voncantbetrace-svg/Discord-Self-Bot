@@ -1,12 +1,14 @@
 const { Client, GatewayIntentBits } = require('discord.js');
+const config = require('./config.json');
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds]
 });
 
+// Bot ready
 client.once('ready', () => {
-  console.log(`Logged in as ${client.user.tag}`);
+  console.log(`✅ Logged in as ${client.user.tag}`);
 });
 
-// 👇 THIS goes at the very bottom
-client.login("MTQ4NTE1OTE0NTQ0NjU3MjA5Mw.G8u9e9.rRWLAIFQwAxXpv9BRaXDEgx0KJ1QXWEZbTMhOU");
+// Login
+client.login(config.token);
