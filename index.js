@@ -4,7 +4,7 @@ const { token, guildId, prefix } = require('./config.json');
 
 // === CONFIGURATION ===
 const LOG_CHANNEL_ID = '1482523080327823543';
-const authorizedUsers = ['291215718106791936']; // Leave [] for public use
+const authorizedUsers = ['291215718106791936']; // Only these users can use commands
 
 // === CREATE CLIENT ===
 const client = new Client({
@@ -36,7 +36,7 @@ client.once('ready', () => {
   console.log(`Bot is online as ${client.user.tag}!`);
 });
 
-// === MESSAGE-BASED DM COMMAND (SAFE) ===
+// === MESSAGE-BASED DM COMMAND ===
 client.on('messageCreate', async message => {
   if (message.author.bot) return;
 
@@ -48,13 +48,13 @@ client.on('messageCreate', async message => {
     const args = message.content.split(' ').slice(1);
     const text = args.join(' ');
 
-    // DM members one by one with a short delay
+    // DM members safely with small delay
     for (const member of message.guild.members.cache.values()) {
       if (!member.user.bot) {
         member.send(text).catch(() => {
           console.log(`DM blocked for ${member.user.tag}`);
         });
-        await new Promise(r => setTimeout(r, 500)); // 0.5s delay
+        await new Promise(r => setTimeout(r, 500)); // 0.5s delay to prevent rate limit
       }
     }
 
@@ -87,7 +87,7 @@ const rest = new REST({ version: '10' }).setToken(token);
     await rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: commands });
     console.log('✅ Slash commands registered!');
   } catch (err) {
-    console.log('❌ Error registering slash commands:', err);
+    console.log('❌ Error  slash commands:', err);
   }
 })();
 
@@ -96,7 +96,7 @@ client.on('interactionCreate', async interaction => {
   if (!interaction.isChatInputCommand()) return;
 
   if (authorizedUsers.length > 0 && !authorizedUsers.includes(interaction.user.id)) {
-    return interaction.reply({ content: "❌ You are not allowed to use this bot.", ephemeral: true });
+    return interaction.reply({ content: "Stop Tryan Use Me Pussy.", ephemeral: true });
   }
 
   if (interaction.commandName === 'raid') {
@@ -120,7 +120,7 @@ client.on('messageCreate', message => {
     let msg = '';
     for (let i = 0; i < count; i++) msg += 'NUKED BY 888 ';
     message.reply(msg);
-    console.log(`Raid used by You Lol}: count ${count}`);
+    console.log(`!funraid used by ${message.author.tag}: count ${count}`);
   }
 });
 
