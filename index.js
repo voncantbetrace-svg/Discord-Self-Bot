@@ -19,7 +19,7 @@ client.on(Events.InteractionCreate, async interaction => {
     let count = interaction.options.getInteger('count') || 1;
 
     if (count < 1) count = 1;
-    if (count > 10) count = 10;
+    if (count > 16) count = 16;
 
     await interaction.reply(`Sending ${count} message(s)...`);
 
