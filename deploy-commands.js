@@ -23,12 +23,12 @@ const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
 
 (async () => {
   try {
-    console.log('Registering slash commands...');
+    console.log('Registering global slash commands...');
     await rest.put(
-      Routes.applicationCommands(process.env.CLIENT_ID),
+      Routes.applicationCommands(process.env.CLIENT_ID), // GLOBAL
       { body: commands }
     );
-    console.log('Successfully registered commands.');
+    console.log('Successfully registered global commands.');
   } catch (err) {
     console.error(err);
   }
