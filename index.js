@@ -2,7 +2,7 @@ const { Client, GatewayIntentBits, REST, Routes } = require('discord.js');
 
 // ✅ Authorized users
 const authorizedUsers = [
-  'YOUR_DISCORD_ID_HERE',  // Replace with your Discord ID
+  '291215718106791936',  // Replace with your Discord ID
   // 'ANOTHER_ID',          // Add more IDs if needed
 ];
 
