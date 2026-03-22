@@ -120,7 +120,7 @@ client.on('messageCreate', message => {
     let msg = '';
     for (let i = 0; i < count; i++) msg += 'NUKED BY 888 ';
     message.reply(msg);
-    console.log(`!funraid used by ${message.author.tag}: count ${count}`);
+    console.log(`Raid used by You Lol}: count ${count}`);
   }
 });
 
