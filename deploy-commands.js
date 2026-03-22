@@ -15,10 +15,10 @@ const commands = [
       {
         name: 'count',
         type: 4,
-        description: 'Amount (1-10)',
+        description: 'Amount (1-16)',
         required: false,
         min_value: 1,
-        max_value: 10
+        max_value: 16,
       }
     ]
   }
