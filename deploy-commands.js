@@ -1,15 +1,15 @@
-// deploy-commands.js
 require('dotenv').config();
 const { REST } = require('@discordjs/rest');
 const { Routes, SlashCommandBuilder } = require('discord.js');
 
-// Check environment variables
-if (!process.env.TOKEN || !process.env.CLIENT_ID || !process.env.GUILD_ID) {
+// ✅ Make sure all required env variables exist
+const { TOKEN, CLIENT_ID, GUILD_ID } = process.env;
+if (!TOKEN || !CLIENT_ID || !GUILD_ID) {
   console.error("ERROR: Missing TOKEN, CLIENT_ID, or GUILD_ID.");
   process.exit(1);
 }
 
-// Define commands
+// ✅ Define commands
 const commands = [
   new SlashCommandBuilder()
     .setName('flood')
@@ -23,18 +23,23 @@ const commands = [
             .setDescription('Number of times to send (1-16)'))
 ].map(cmd => cmd.toJSON());
 
-// **Declare rest only once**
-const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
+// ✅ Create REST client with bot token
+const rest = new REST({ version: '10' }).setToken(TOKEN);
 
 (async () => {
   try {
-    console.log('Registering commands...');
+    console.log('Registering slash commands...');
+
+    // Register commands for a specific guild (faster for testing)
     await rest.put(
-      Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.GUILD_ID),
+      Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID),
       { body: commands }
     );
-    console.log('Commands registered successfully!');
-  } catch (err) {
-    console.error('Error registering commands:', err);
+
+    console.log('✅ Commands registered successfully!');
+  } catch (error) {
+    // Detailed error logging
+    console.error('❌ Failed to register commands. Check your TOKEN, CLIENT_ID, and GUILD_ID:');
+    console.error(error);
   }
 })();
