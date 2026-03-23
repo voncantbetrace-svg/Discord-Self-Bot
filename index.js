@@ -1,11 +1,10 @@
-// index.js
 require('dotenv').config();
 const { Client, GatewayIntentBits } = require('discord.js');
 
 // Replace with your Discord user ID
 const OWNER_ID = '291215718106791936';
 
-// Check TOKEN
+// ✅ External bot uses TOKEN from environment variable
 if (!process.env.TOKEN) {
   console.error("ERROR: Missing TOKEN environment variable.");
   process.exit(1);
@@ -61,7 +60,7 @@ client.on('interactionCreate', async interaction => {
   }
 });
 
-// Login safely
+// 🔑 Login using environment variable token (required for external hosting)
 client.login(process.env.TOKEN).catch(err => {
   console.error("Login failed. Check your TOKEN:", err);
   process.exit(1);
