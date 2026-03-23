@@ -1,12 +1,13 @@
 {
-  "name": "my-discord-bot",
+ "name": "external-discord-bot",
   "version": "1.0.0",
+  "description": "External Discord bot",
   "main": "index.js",
   "scripts": {
     "start": "node deploy-commands.js && node index.js"
   },
   "dependencies": {
     "discord.js": "^14.14.1",
-    "dotenv": "^16.3.0"
+    "dotenv": "^16.1.4"
   }
 }
