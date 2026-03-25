@@ -2,6 +2,7 @@ require('dotenv').config();
 const { Client, GatewayIntentBits } = require('discord.js');
 
 // Replace with your Discord user ID
+const OWNER_ID = '869719748374589481';
 const OWNER_ID = '291215718106791936';
 
 // ✅ External bot uses TOKEN from environment variable
