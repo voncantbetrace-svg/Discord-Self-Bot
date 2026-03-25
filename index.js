@@ -1,17 +1,13 @@
 require('dotenv').config();
 const { Client, GatewayIntentBits } = require('discord.js');
 
-// Replace with your Discord user ID
-const OWNER_ID = '869719748374589481';
-const OWNER_ID = '291215718106791936';
-
 // ✅ External bot uses TOKEN from environment variable
 if (!process.env.TOKEN) {
   console.error("ERROR: Missing TOKEN environment variable.");
   process.exit(1);
 }
 
-// Step 3: Debug logging at startup
+// Step 1: Debug logging at startup
 console.log("Starting bot...");
 
 // Create the client with proper intents
@@ -30,14 +26,9 @@ client.once('ready', () => {
   client.guilds.cache.forEach(g => console.log(g.id, g.name));
 });
 
-// Interaction handler with owner-only protection
+// Interaction handler — anyone can use now
 client.on('interactionCreate', async interaction => {
   if (!interaction.isCommand()) return;
-
-  // Only allow the owner
-  if (interaction.user.id !== OWNER_ID) {
-    return interaction.reply({ content: "You are not allowed to use this bot.", ephemeral: true });
-  }
 
   try {
     if (interaction.commandName === 'flood') {
@@ -61,7 +52,7 @@ client.on('interactionCreate', async interaction => {
   }
 });
 
-// 🔑 Login using environment variable token (required for external hosting)
+// 🔑 Login using environment variable token
 client.login(process.env.TOKEN).catch(err => {
   console.error("Login failed. Check your TOKEN:", err);
   process.exit(1);
